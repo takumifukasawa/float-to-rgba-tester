@@ -16,13 +16,15 @@
     <p class="js-rgba-value-g"></p>
     <p class="js-rgba-value-b"></p>
     <p class="js-rgba-value-a"></p>
+    <p class="js-unpack-float-value"></p>
 <script>
     const floatInputElem = document.querySelector(".js-float-input");
     const packRValueElem = document.querySelector(".js-rgba-value-r");
     const packGValueElem = document.querySelector(".js-rgba-value-g");
     const packBValueElem = document.querySelector(".js-rgba-value-b");
     const packAValueElem = document.querySelector(".js-rgba-value-a");
-    
+    const unpackFloatValueElem = document.querySelector(".js-unpack-float-value");
+
     const floatPackToRGBA = (num) => {
         const rawR = num * 255;
         const r = Math.floor(rawR);
@@ -39,16 +41,23 @@
         return r / 255 + g / (255 * 255) + g / (255 * 255 * 255) + a / (255 * 255 * 255 * 255);
     };
     
-    floatInputElem.addEventListener('input', (e) => {
-        const value = e.target.value;
-        const num = Number.parseFloat(value);
+    const onInput = (num) => {
         const { r, g, b, a } = floatPackToRGBA(num);
         const unpackFloat = unpackRGBAToFloat({ r, g, b, a });
+        packRValueElem.textContent = `r: ${r.toString()}`;
+        packGValueElem.textContent = `g: ${g.toString()}`;
+        packBValueElem.textContent = `b: ${b.toString()}`;
+        packAValueElem.textContent = `a: ${a.toString()}`;
+        unpackFloatValueElem.textContent = `result: ${unpackFloat.toString()}`;
         console.log("------------------");
         console.log("source float", num);
         console.log("pack rgba", r, g, b, a)
         console.log("unpack float", unpackFloat)
-    });
+    };
+
+    floatInputElem.addEventListener('input', (e) => onInput(Number.parseFloat(e.target.value)));
+    
+    onInput(0);
 </script>
 </body>
 </html>
