@@ -9,7 +9,7 @@
 </head>
 <body>
     <h1>float-to-rgba-tester</h1>
-    <p>float value</p>
+    <p>float value (0 ~ 1)</p>
     <input type="text" class="js-float-input" />
     <p>rgba value</p>
     <p class="js-rgba-value-r"></p>
@@ -25,30 +25,31 @@
     const packAValueElem = document.querySelector(".js-rgba-value-a");
     const unpackFloatValueElem = document.querySelector(".js-unpack-float-value");
 
-    const floatPackToRGBA = (num) => {
-        const rawR = num * 255;
-        const r = Math.floor(rawR);
-        const rawG = (rawR - r) * 255;
-        const g = Math.floor(rawG);
-        const rawB = (rawG - g) * 255;
-        const b = Math.floor(rawB);
-        const rawA = (rawB - b) * 255;
-        const a = Math.floor(rawA);
-        return { r, g, b, a };
-    };
-    
-    const unpackRGBAToFloat = ({ r, g, b, a }) => {
-        return r / 255 + g / (255 * 255) + g / (255 * 255 * 255) + a / (255 * 255 * 255 * 255);
-    };
-    
+    class FloatPacker {
+        static packToRGBA(num) {
+            const rawR = num * 255;
+            const r = Math.floor(rawR);
+            const rawG = (rawR - r) * 255;
+            const g = Math.floor(rawG);
+            const rawB = (rawG - g) * 255;
+            const b = Math.floor(rawB);
+            const rawA = (rawB - b) * 255;
+            const a = Math.floor(rawA);
+            return { r, g, b, a };
+        }
+        static unpackToFloat({ r, g, b, a }) {
+            return r / 255 + g / (255 * 255) + b / (255 * 255 * 255) + a / (255 * 255 * 255 * 255);
+        }
+    }
+
     const onInput = (num) => {
-        const { r, g, b, a } = floatPackToRGBA(num);
-        const unpackFloat = unpackRGBAToFloat({ r, g, b, a });
+        const { r, g, b, a } = FloatPacker.packToRGBA(num);
+        const unpackFloat = FloatPacker.unpackToFloat({ r, g, b, a });
         packRValueElem.textContent = `r: ${r.toString()}`;
         packGValueElem.textContent = `g: ${g.toString()}`;
         packBValueElem.textContent = `b: ${b.toString()}`;
         packAValueElem.textContent = `a: ${a.toString()}`;
-        unpackFloatValueElem.textContent = `result: ${unpackFloat.toString()}`;
+        unpackFloatValueElem.textContent = `unpack float: ${unpackFloat.toString()}`;
         console.log("------------------");
         console.log("source float", num);
         console.log("pack rgba", r, g, b, a)
