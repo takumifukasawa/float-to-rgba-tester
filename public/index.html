@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>float-to-rgba-tester</title>
+</head>
+<body>
+    <h1>float-to-rgba-tester</h1>
+    <p>float value</p>
+    <input type="text" class="js-float-input" />
+    <p>rgba value</p>
+    <p type="text" class="js-rgba-value-r"></p>
+    <p type="text" class="js-rgba-value-g"></p>
+    <p type="text" class="js-rgba-value-b"></p>
+    <p type="text" class="js-rgba-value-a"></p>
+<script>
+    const floatInputElem = document.querySelector(".js-float-input");
+    const packRValueElem = document.querySelector(".js-rgba-value-r");
+    const packGValueElem = document.querySelector(".js-rgba-value-g");
+    const packBValueElem = document.querySelector(".js-rgba-value-b");
+    const packAValueElem = document.querySelector(".js-rgba-value-a");
+    
+    const floatPackToRGBA = (num) => {
+        const rawR = num * 255;
+        const r = Math.floor(rawR);
+        const rawG = (rawR - r) * 255;
+        const g = Math.floor(rawG);
+        const rawB = (rawG - g) * 255;
+        const b = Math.floor(rawB);
+        const rawA = (rawB - b) * 255;
+        const a = Math.floor(rawA);
+        return { r, g, b, a };
+    };
+    
+    const unpackRGBAToFloat = ({ r, g, b, a }) => {
+        return r / 255 + g / (255 * 255) + g / (255 * 255 * 255) + a / (255 * 255 * 255 * 255);
+    };
+    
+    floatInputElem.addEventListener('input', (e) => {
+        const value = e.target.value;
+        const num = Number.parseFloat(value);
+        const { r, g, b, a } = floatPackToRGBA(num);
+        const unpackFloat = unpackRGBAToFloat({ r, g, b, a });
+        console.log("------------------");
+        console.log("source float", num);
+        console.log("pack rgba", r, g, b, a)
+        console.log("unpack float", unpackFloat)
+    });
+</script>
+</body>
+</html>
